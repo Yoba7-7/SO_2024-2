@@ -3,7 +3,7 @@
 #include <time.h>
 
 #define NUM_PROCESOS 5
-#define QUANTUM_TOTAL 10
+#define QUANTUM_TOTAL 100
 
 typedef struct {
     int id;
@@ -18,6 +18,7 @@ Proceso procesos[NUM_PROCESOS];
 
 void asignar_recursos() {
     srand(time(NULL));
+    printf("Procesos creados:\n");
     for (int i = 0; i < NUM_PROCESOS; i++) {
         procesos[i].id = i + 1; // Asignar un ID único a cada proceso
         procesos[i].quantum = rand() % (QUANTUM_TOTAL / 2) + 1; // Quantum aleatorio
@@ -28,11 +29,29 @@ void asignar_recursos() {
             procesos[i].numeros[j] = rand() % 100; // Números aleatorios
         }
         procesos[i].estado = 0; // Estado inicial: En espera
+        // Mostrar detalles del proceso creado
+        printf("Proceso ID: %d | Boletos: %d | Quantum: %d | Estado: En espera\n", procesos[i].id, procesos[i].boletos, procesos[i].quantum);
     }
+    printf("\n");
 }
 
 void imprimir_proceso(Proceso p) {
-    printf("Proceso ID: %d | Estado: %d | Quantum restante: %d | Tiempo restante: %d\n", p.id, p.estado, p.quantum, QUANTUM_TOTAL - p.tiempo_cpu);
+    const char *estado_str;
+    switch (p.estado) {
+        case 0:
+            estado_str = "En espera";
+            break;
+        case 1:
+            estado_str = "Ejecutando";
+            break;
+        case 2:
+            estado_str = "Terminado";
+            break;
+        default:
+            estado_str = "Desconocido";
+            break;
+    }
+    printf("Proceso ID: %d | Boletos: %d | Quantum restante: %d | Tiempo restante: %d | Estado: %s\n", p.id, p.boletos, p.quantum, QUANTUM_TOTAL - p.tiempo_cpu, estado_str);
 }
 
 void imprimir_detalles() {
@@ -74,12 +93,12 @@ void ejecutar_proceso(int ganador) {
 
 int main() {
     asignar_recursos();
-    int todos_terminados = 0; // Cambiamos a 0 para que el bucle se ejecute al menos una vez
-    while (!todos_terminados) { // Verificamos si todos los procesos han terminado
+    int todos_terminados = 0; // Cambiar a 0 para que el bucle se ejecute al menos una vez
+    while (!todos_terminados) { // Verificar si todos los procesos han terminado
         imprimir_detalles();
         int ganador = rifa_loteria();
         ejecutar_proceso(ganador);
-        // Verificamos si todos los procesos han terminado
+        // Verificar si todos los procesos han terminado
         todos_terminados = 1;
         for (int i = 0; i < NUM_PROCESOS; i++) {
             if (procesos[i].estado != 2) {

@@ -1,0 +1,6 @@
+Instrucciones:
+- Dirigirse mediante la terminal al directorio que contiene el archivo LotterySched.c 
+- Como ya viene incluido el binario que se genera al compilar el archivo ya no es necesario usar gcc
+- Correr el programa ./LotterySched 
+
+Nota: No termina ... pero ya me rindo jajaj
